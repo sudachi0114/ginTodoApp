@@ -5,15 +5,14 @@
     <title>Sample App</title>
 </head>
 <body>
-  <h1>Hello World!!!</h1>
-  <h2> こんにちは {{ .data }} </h2>
+  <h1>Todo App ✌(’ω’✌ )三✌(’ω’)✌三( ✌’ω’)✌ </h1>
 
   <!-- 投稿フォーム -->
-  <h2>Todo 投稿フォーム ✌(’ω’✌ )三✌(’ω’)✌三( ✌’ω’)✌ </h2>
+  <h2>投稿フォーム</h2>
 
   <form method="post" action="/new">
-    <p> やること <input type="text" name="text" size="30" placeholder="Todo を入力してください"> </p>
-    <p> status
+    <p> やること: <input type="text" name="text" size="30" placeholder="Todo を入力してください"> </p>
+    <p> status:
         <select name="status">
           <option value="まだ">まだ</option>
           <option value="いま、やってるって!">いま、やってるって!</option>
@@ -24,15 +23,11 @@
     <p> <input type="submit" value="送信!!"> </p>
   </form>
 
-  <!-- <div> {{ .todo }} </div> -->
-
-  <p> ⬇️  todos </p>
-
-  <!-- <div> {{ .todos }} </div> -->
+  <p> ⬇️ Your todos </p>
 
   <ul>
     {{ range .todos }}
-    <li> やること: {{ .Text }} | status: {{ .Status }} </li>
+      <li> やること: {{ .Text }} | status: {{ .Status }} </li>
     {{ end }}
   </ul>
 
