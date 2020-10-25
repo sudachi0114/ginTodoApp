@@ -1,35 +1,55 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>Sample App</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+  <title>Sample App</title>
 </head>
 <body>
-  <h1>Todo App ✌(’ω’✌ )三✌(’ω’)✌三( ✌’ω’)✌ </h1>
 
-  <!-- 投稿フォーム -->
-  <h2>投稿フォーム</h2>
+  <div class="mx-auto" style="width: 75%;">
 
-  <form method="post" action="/new">
-    <p> やること: <input type="text" name="text" size="30" placeholder="Todo を入力してください"> </p>
-    <p> status:
-        <select name="status">
-          <option value="まだ">まだ</option>
-          <option value="いま、やってるって!">いま、やってるって!</option>
-          <option value="オワタ">＼(^o^)／</option>
-        </select>
-    </p>
+    <h1>Todo App ✌(’ω’✌ )三✌(’ω’)✌三( ✌’ω’)✌ </h1>
 
-    <p> <input type="submit" value="送信!!"> </p>
-  </form>
+    <!-- 投稿フォーム -->
+    <h2>投稿フォーム</h2>
 
-  <p> ⬇️ Your todos </p>
+    <form method="post" action="/new">
+      <div class="form-group">
+        <label for="exampleInputEmail1">やること:</label>
+        <input type="text" name="text" size="30" class="form-control" id="exampleFormControlInput1" placeholder="Todo を入力してください">
+        <small id="textHelp" class="form-text text-muted">Todo 管理してえらい。</small>
+      </div>
 
-  <ul>
-    {{ range .todos }}
-      <li> やること: {{ .Text }} | status: {{ .Status }} </li>
-    {{ end }}
-  </ul>
+      <div class="input-group mb-3">
+        <select name="status" class="custom-select" id="inputGroupSelect02">
+          <option selected>Status...</option>
+            <option value="まだ">まだ</option>
+            <option value="いま、やってるって!">いま、やってるって!</option>
+            <option value="オワタ">＼(^o^)／</option>
+          </select>
+      </div>
+      
+
+          </select>
+      </p>
+
+      <button type="submit" class="btn btn-primary mb-2">送信!</button>
+    </form>
+
+    <p> ⬇️ Your todos </p>
+
+    <ul>
+      {{ range .todos }}
+        <li> やること: {{ .Text }} | status: {{ .Status }} </li>
+      {{ end }}
+    </ul>
+
+  </div>
 
 </body>
 </html>
