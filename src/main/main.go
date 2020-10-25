@@ -145,5 +145,23 @@ func main() {
 		ctx.HTML(200, "detail.html", gin.H{"todo": todo})
 	})
 
+	router.POST("/update/:id", func(ctx *gin.Context) {
+		n := ctx.Param("id")
+		id, err := strconv.Atoi(n)
+		if err != nil {
+			panic(err)
+		}
+		title := ctx.PostForm("title")
+		description := ctx.PostForm("description")
+		var done bool = false
+		if ctx.PostForm("done") == "1" {
+			done = true
+		}
+
+		update(id, title, description, done)
+
+		ctx.Redirect(302, "/")
+	})
+
 	router.Run()
 }
