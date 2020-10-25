@@ -1,0 +1,12 @@
+# emacs backup-file
+*~
+\#*\#
+
+# macOS system-file
+.DS_Store
+
+# go.sum
+go.sum
+
+# Database file
+*.sqlite3
