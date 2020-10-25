@@ -15,7 +15,7 @@ type Todo struct {
 	gorm.Model
 	Title string
 	Description string
-	Done bool
+	Done string `form:"done"` // bool にしたい
 }
 
 // Database 初期化 (migration)
@@ -36,13 +36,13 @@ func insert(title string, description string) {
 		panic("Error occured! Something wrong with insert...")
 	}
 
-	db.Create(&Todo{Title: title, Description: description, Done: false})
+	db.Create(&Todo{Title: title, Description: description, Done: "0"})
 
 	defer db.Close()
 }
 
 // レコードの更新 (UPDATE)
-func update(id int, title string, description string, done bool) {
+func update(id int, title string, description string, done string) {
 	db, err := gorm.Open("sqlite3", "test.sqlite3")
 	if err != nil {
 		panic("Error occured! Something wrong with update...")
@@ -153,9 +153,9 @@ func main() {
 		}
 		title := ctx.PostForm("title")
 		description := ctx.PostForm("description")
-		var done bool = false
+		var done string = "0"
 		if ctx.PostForm("done") == "1" {
-			done = true
+			done = "1"
 		}
 
 		update(id, title, description, done)
