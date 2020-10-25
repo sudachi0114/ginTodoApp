@@ -13,51 +13,56 @@ import (
 // data-object というやつ??
 type Todo struct {
 	gorm.Model
-	Text string
-	Status string
+	Title string
+	Description string
+	Done bool
 }
 
 // Database 初期化 (migration)
-func dbInit() {
+func migrateDB() {
 	db, err := gorm.Open("sqlite3", "test.sqlite3")
 	if err != nil {
-		panic("データベース開なかったわ!ごめん!")
+		panic("Error occured! Something wrong with migration...")
 	}
 	db.AutoMigrate(&Todo{})
+
 	defer db.Close()
 }
 
-// Database にレコードを追加
-func dbInsert(text string, status string) {
+// レコードを追加 (INSERT / CREATE)
+func insert(title string, description string) {
 	db, err := gorm.Open("sqlite3", "test.sqlite3")
 	if err != nil {
-		panic("データベース開なかったわ!ごめん!")
+		panic("Error occured! Something wrong with insert...")
 	}
-	db.Create(&Todo{Text: text, Status: status})
+
+	db.Create(&Todo{Title: title, Description: description, Done: false})
+
 	defer db.Close()
 }
 
-// Database にあるレコードの更新
-func dbUpdate(id int, text string, status string) {
+// レコードの更新 (UPDATE)
+func update(id int, title string, description string, done bool) {
 	db, err := gorm.Open("sqlite3", "test.sqlite3")
 	if err != nil {
-		panic("データベース開なかったわ!ごめん!")
+		panic("Error occured! Something wrong with update...")
 	}
 
 	var todo Todo
 	db.First(&todo, id)
-	todo.Text = text
-	todo.Status = status
+	todo.Title = title
+	todo.Description = description
+	todo.Done = done
 	db.Save(&todo)
 
 	db.Close()
 }
 
-// Database にあるレコードの削除
-func dbDelete(id int) {
+// レコードの削除 (DELETE)  ** FIXME: 物理削除 => 論理削除 **
+func delete(id int) {
 	db, err := gorm.Open("sqlite3", "test.sqlite3")
 	if err != nil {
-		panic("データベース開なかったわ!ごめん!")
+		panic("Error occured! Something wrong with delete...")
 	}
 
 	var todo Todo
@@ -67,15 +72,15 @@ func dbDelete(id int) {
 	db.Close()
 }
 
-// Database のデータを全取得
-func dbGetAll() []Todo {
+// Database のデータを全取得 (SELECT *)
+func getAll() []Todo {
 	db, err := gorm.Open("sqlite3", "test.sqlite3")
 	if err != nil {
-		panic("データベース開なかったわ!ごめん!")
+		panic("Error occured! Something wrong with fetch all data from database...")
 	}
 
 	var todos []Todo
-	// db.Order("create_at desc").Find(&todos)
+	db.Order("created_at desc").Find(&todos)
 	db.Find(&todos)
 
 	db.Close()
@@ -87,51 +92,43 @@ func dbGetAll() []Todo {
 func dbGetOne(id int) Todo {
 	db, err := gorm.Open("sqlite3", "test.sqlite3")
 	if err != nil {
-		panic("データベース開なかったわ!ごめん!")
+		panic("Error occured! Something wrong with fetch a data from database...")
 	}
 
 	var todo Todo
 	db.First(&todo, id)
 
 	db.Close()
+
 	return todo
 }
 
 
 
 func main() {
-	fmt.Printf("< Program started >\n")
+	fmt.Printf("< Server started >\n")
 
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*.html")
 
-	fmt.Println("<info> DataBase Inited!!")
-	dbInit()
-
-	x := "すだちです"
-	var todo Todo
-	todo.Text = "このアプリを仕上げる"
-	todo.Status = "yet"
-	// todos := [1] Todo{todo}
-	fmt.Println(todo.Text, todo.Status)
+	fmt.Println("<info> DataBase Migration!!")
+	migrateDB()
 
 	// index root
 	router.GET("/", func(ctx *gin.Context) {
 
-		todos := dbGetAll()
+		todos := getAll()
 		
 		ctx.HTML(200, "index.html", gin.H{
-			"data": x,
-			"todo": todo,
 			"todos": todos,
 		})
 	})
 
 	// Create Todo
 	router.POST("/new", func(ctx *gin.Context) {
-		text := ctx.PostForm("text")
-		status := ctx.PostForm("status")
-		dbInsert(text, status)
+		title := ctx.PostForm("title")
+		description := ctx.PostForm("description")
+		insert(title, description)
 
 		ctx.Redirect(302, "/")
 	})
