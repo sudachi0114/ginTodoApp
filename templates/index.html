@@ -11,7 +11,7 @@
 </head>
 <body>
 
-  <div class="mx-auto" style="width: 75%;">
+  <div class="mx-auto mt-5" style="width: 75%;">
 
     <h1>Todo App ✌(’ω’✌ )三✌(’ω’)✌三( ✌’ω’)✌ </h1>
 
@@ -32,16 +32,6 @@
         <textarea name="description" class="form-control" aria-label="With textarea" placeholder="詳細がある場合は、ここに記載"></textarea>
       </div>
 
-      <!--
-      <div class="input-group mb-3">
-        <select name="status" class="custom-select" id="inputGroupSelect02">
-          <option selected>Status...</option>
-            <option value="まだ">まだ</option>
-            <option value="いま、やってるって!">いま、やってるって!</option>
-            <option value="オワタ">＼(^o^)／</option>
-          </select>
-      </div>
-      -->
       <button type="submit" class="btn btn-primary mb-2">送信!</button>
     </form>
 
@@ -49,7 +39,10 @@
 
     <ul>
       {{ range .todos }}
-        <li> やること: {{ .Title }} | Description: {{ .Description }} | Done?: {{ .Done }} </li>
+        <li> 
+          やること: {{ .Title }} | Description: {{ .Description }} | Done?: {{ .Done }} 
+          <label><a href="/detail/{{.ID}}">編集</a></label>
+        </li>
       {{ end }}
     </ul>
 
