@@ -35,18 +35,33 @@
       <button type="submit" class="btn btn-primary mb-2">送信!</button>
     </form>
 
-    <p> ⬇️ Your todos </p>
+    <!-- TODO 一覧 -->
+    <p class="m-3"> ⬇️ Your todos </p>
 
     <ul>
-      {{ range .todos }}
-        <li> 
-          やること: {{ .Title }} | Description: {{ .Description }} | Done?: {{ .Done }} 
-          <label><a href="/detail/{{.ID}}">編集</a></label>
-        </li>
-      {{ end }}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">やること</th>
+            <th scope="col">詳細</th>
+            <th scope="col">おわった?</th>
+            <th scope="col">detail へ</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .todos }}
+          <tr>
+            <th scope="row">{{ .ID }}</th>
+            <td>{{ .Title }}</td>
+            <td>{{ .Description }}</td>
+            <td>{{ .Done }}</td>
+            <td><label><a href="/detail/{{.ID}}">編集</a></label></td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
     </ul>
-
   </div>
-
 </body>
 </html>
