@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+  <title>Sample App</title>
+</head>
+<body>
+
+  <div class="mx-auto mt-5" style="width: 75%;">
+
+    <h1>detail page</h1>
+
+    {{ .todo }}
+
+    <form method="post" action="/update/{{.todo.ID}}">
+        <div class="form-group">
+          <label for="todoTitleInput">やること:</label>
+          <input type="text" name="title" size="15" class="form-control" id="exampleFormControlInput1" value="{{ .todo.Title }}">
+          <small id="textHelp" class="form-text text-muted">Todo 管理してえらい。</small>
+        </div>
+  
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">追加の説明 (なくても良):</span>
+          </div>
+          <textarea name="description" class="form-control" aria-label="With textarea">{{ .todo.Description }}</textarea>
+        </div>
+
+        <div class="form-group form-check">
+            <input type="checkbox" name="done" class="form-check-input" id="exampleCheck1" value="1">
+            <label class="form-check-label" for="exampleCheck1">Done??</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary mb-2">送信!</button>
+      </form>
+  </div>
+</body>
+</html>

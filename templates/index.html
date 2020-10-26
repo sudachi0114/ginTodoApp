@@ -11,7 +11,7 @@
 </head>
 <body>
 
-  <div class="mx-auto" style="width: 75%;">
+  <div class="mx-auto mt-5" style="width: 75%;">
 
     <h1>Todo App ✌(’ω’✌ )三✌(’ω’)✌三( ✌’ω’)✌ </h1>
 
@@ -20,36 +20,48 @@
 
     <form method="post" action="/new">
       <div class="form-group">
-        <label for="exampleInputEmail1">やること:</label>
-        <input type="text" name="text" size="30" class="form-control" id="exampleFormControlInput1" placeholder="Todo を入力してください">
+        <label for="todoTitleInput">やること:</label>
+        <input type="text" name="title" size="15" class="form-control" id="exampleFormControlInput1" placeholder="Todo を入力してください">
         <small id="textHelp" class="form-text text-muted">Todo 管理してえらい。</small>
       </div>
 
       <div class="input-group mb-3">
-        <select name="status" class="custom-select" id="inputGroupSelect02">
-          <option selected>Status...</option>
-            <option value="まだ">まだ</option>
-            <option value="いま、やってるって!">いま、やってるって!</option>
-            <option value="オワタ">＼(^o^)／</option>
-          </select>
+        <div class="input-group-prepend">
+          <span class="input-group-text">追加の説明 (なくても良):</span>
+        </div>
+        <textarea name="description" class="form-control" aria-label="With textarea" placeholder="詳細がある場合は、ここに記載"></textarea>
       </div>
-      
-
-          </select>
-      </p>
 
       <button type="submit" class="btn btn-primary mb-2">送信!</button>
     </form>
 
-    <p> ⬇️ Your todos </p>
+    <!-- TODO 一覧 -->
+    <p class="m-3"> ⬇️ Your todos </p>
 
     <ul>
-      {{ range .todos }}
-        <li> やること: {{ .Text }} | status: {{ .Status }} </li>
-      {{ end }}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">やること</th>
+            <th scope="col">詳細</th>
+            <th scope="col">おわった?</th>
+            <th scope="col">detail へ</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .todos }}
+          <tr>
+            <th scope="row">{{ .ID }}</th>
+            <td>{{ .Title }}</td>
+            <td>{{ .Description }}</td>
+            <td>{{ .Done }}</td>
+            <td><label><a href="/detail/{{.ID}}">編集</a></label></td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
     </ul>
-
   </div>
-
 </body>
 </html>
