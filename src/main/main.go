@@ -5,18 +5,11 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sudachi0114/ginTodoApp/src/main/models"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/mattn/go-sqlite3"
 )
-
-// data-object というやつ??
-type Todo struct {
-	gorm.Model
-	Title string
-	Description string
-	Done string `form:"done"` // bool にしたい
-}
 
 // Database 初期化 (migration)
 func migrateDB() {
@@ -24,7 +17,7 @@ func migrateDB() {
 	if err != nil {
 		panic("Error occured! Something wrong with migration...")
 	}
-	db.AutoMigrate(&Todo{})
+	db.AutoMigrate(&models.Todo{})
 
 	defer db.Close()
 }
@@ -36,7 +29,7 @@ func insert(title string, description string) {
 		panic("Error occured! Something wrong with insert...")
 	}
 
-	db.Create(&Todo{Title: title, Description: description, Done: "0"})
+	db.Create(&models.Todo{Title: title, Description: description, Done: "0"})
 
 	defer db.Close()
 }
@@ -48,7 +41,7 @@ func update(id int, title string, description string, done string) {
 		panic("Error occured! Something wrong with update...")
 	}
 
-	var todo Todo
+	var todo models.Todo
 	db.First(&todo, id)
 	todo.Title = title
 	todo.Description = description
@@ -65,7 +58,7 @@ func delete(id int) {
 		panic("Error occured! Something wrong with delete...")
 	}
 
-	var todo Todo
+	var todo models.Todo
 	db.First(&todo, id)
 	db.Delete(&todo)
 
@@ -73,13 +66,13 @@ func delete(id int) {
 }
 
 // Database のデータを全取得 (SELECT *)
-func getAll() []Todo {
+func getAll() []models.Todo {
 	db, err := gorm.Open("sqlite3", "test.sqlite3")
 	if err != nil {
 		panic("Error occured! Something wrong with fetch all data from database...")
 	}
 
-	var todos []Todo
+	var todos []models.Todo
 	db.Order("created_at desc").Find(&todos)
 	db.Find(&todos)
 
@@ -89,21 +82,19 @@ func getAll() []Todo {
 }
 
 // Database のデータ 1件取得
-func dbGetOne(id int) Todo {
+func dbGetOne(id int) models.Todo {
 	db, err := gorm.Open("sqlite3", "test.sqlite3")
 	if err != nil {
 		panic("Error occured! Something wrong with fetch a data from database...")
 	}
 
-	var todo Todo
+	var todo models.Todo
 	db.First(&todo, id)
 
 	db.Close()
 
 	return todo
 }
-
-
 
 func main() {
 	fmt.Printf("< Server started >\n")
@@ -118,7 +109,7 @@ func main() {
 	router.GET("/", func(ctx *gin.Context) {
 
 		todos := getAll()
-		
+
 		ctx.HTML(200, "index.html", gin.H{
 			"todos": todos,
 		})
