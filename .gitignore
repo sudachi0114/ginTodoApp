@@ -10,3 +10,6 @@ go.sum
 
 # Database file
 *.sqlite3
+
+# Binary
+main
