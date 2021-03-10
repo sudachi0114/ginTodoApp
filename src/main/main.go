@@ -11,17 +11,6 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// Database 初期化 (migration)
-func migrateDB() {
-	db, err := gorm.Open("sqlite3", "test.sqlite3")
-	if err != nil {
-		panic("Error occured! Something wrong with migration...")
-	}
-	db.AutoMigrate(&models.Todo{})
-
-	defer db.Close()
-}
-
 // レコードを追加 (INSERT / CREATE)
 func insert(title string, description string) {
 	db, err := gorm.Open("sqlite3", "test.sqlite3")
@@ -101,9 +90,6 @@ func main() {
 
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*.html")
-
-	fmt.Println("<info> DataBase Migration!!")
-	migrateDB()
 
 	// index root
 	router.GET("/", func(ctx *gin.Context) {
