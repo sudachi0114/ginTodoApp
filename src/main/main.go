@@ -5,105 +5,10 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-
-	"github.com/jinzhu/gorm"
 	_ "github.com/mattn/go-sqlite3"
+
+	"github.com/sudachi0114/ginTodoApp/src/main/controller"
 )
-
-// data-object というやつ??
-type Todo struct {
-	gorm.Model
-	Title string
-	Description string
-	Done string `form:"done"` // bool にしたい
-}
-
-// Database 初期化 (migration)
-func migrateDB() {
-	db, err := gorm.Open("sqlite3", "test.sqlite3")
-	if err != nil {
-		panic("Error occured! Something wrong with migration...")
-	}
-	db.AutoMigrate(&Todo{})
-
-	defer db.Close()
-}
-
-// レコードを追加 (INSERT / CREATE)
-func insert(title string, description string) {
-	db, err := gorm.Open("sqlite3", "test.sqlite3")
-	if err != nil {
-		panic("Error occured! Something wrong with insert...")
-	}
-
-	db.Create(&Todo{Title: title, Description: description, Done: "0"})
-
-	defer db.Close()
-}
-
-// レコードの更新 (UPDATE)
-func update(id int, title string, description string, done string) {
-	db, err := gorm.Open("sqlite3", "test.sqlite3")
-	if err != nil {
-		panic("Error occured! Something wrong with update...")
-	}
-
-	var todo Todo
-	db.First(&todo, id)
-	todo.Title = title
-	todo.Description = description
-	todo.Done = done
-	db.Save(&todo)
-
-	db.Close()
-}
-
-// レコードの削除 (DELETE)  ** FIXME: 物理削除 => 論理削除 **
-func delete(id int) {
-	db, err := gorm.Open("sqlite3", "test.sqlite3")
-	if err != nil {
-		panic("Error occured! Something wrong with delete...")
-	}
-
-	var todo Todo
-	db.First(&todo, id)
-	db.Delete(&todo)
-
-	db.Close()
-}
-
-// Database のデータを全取得 (SELECT *)
-func getAll() []Todo {
-	db, err := gorm.Open("sqlite3", "test.sqlite3")
-	if err != nil {
-		panic("Error occured! Something wrong with fetch all data from database...")
-	}
-
-	var todos []Todo
-	db.Order("created_at desc").Find(&todos)
-	db.Find(&todos)
-
-	db.Close()
-
-	return todos
-}
-
-// Database のデータ 1件取得
-func dbGetOne(id int) Todo {
-	db, err := gorm.Open("sqlite3", "test.sqlite3")
-	if err != nil {
-		panic("Error occured! Something wrong with fetch a data from database...")
-	}
-
-	var todo Todo
-	db.First(&todo, id)
-
-	db.Close()
-
-	return todo
-}
-
-
 
 func main() {
 	fmt.Printf("< Server started >\n")
@@ -111,14 +16,11 @@ func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*.html")
 
-	fmt.Println("<info> DataBase Migration!!")
-	migrateDB()
-
 	// index root
 	router.GET("/", func(ctx *gin.Context) {
 
-		todos := getAll()
-		
+		todos := controller.GetAll()
+
 		ctx.HTML(200, "index.html", gin.H{
 			"todos": todos,
 		})
@@ -128,7 +30,7 @@ func main() {
 	router.POST("/new", func(ctx *gin.Context) {
 		title := ctx.PostForm("title")
 		description := ctx.PostForm("description")
-		insert(title, description)
+		controller.Insert(title, description)
 
 		ctx.Redirect(302, "/")
 	})
@@ -140,7 +42,7 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		todo := dbGetOne(id)
+		todo := controller.DbGetOne(id)
 
 		ctx.HTML(200, "detail.html", gin.H{"todo": todo})
 	})
@@ -158,7 +60,7 @@ func main() {
 			done = "1"
 		}
 
-		update(id, title, description, done)
+		controller.Update(id, title, description, done)
 
 		ctx.Redirect(302, "/")
 	})

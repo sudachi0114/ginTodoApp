@@ -9,4 +9,8 @@
 go.sum
 
 # Database file
-*.sqlite3
+*.sqlite3*
+
+# Binary
+./main
+# TODO: バイナリファイルだけ対象にできるように直す
